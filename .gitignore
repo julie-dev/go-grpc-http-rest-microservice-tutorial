@@ -18,4 +18,7 @@
 
 cmd/server/run.sh
 cmd/server/grpc_server
-
+cmd/client/run.sh
+cmd/client/grcp_client
+cmd/client-rest/run.sh
+cmd/client-rest/grpc_client_rest

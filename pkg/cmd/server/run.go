@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
+	"github.com/julie-dev/go-grpc-http-rest-microservice-tutorial/pkg/protocol/rest"
 	v1 "github.com/julie-dev/go-grpc-http-rest-microservice-tutorial/pkg/service/v1"
 	"strconv"
 
@@ -14,6 +15,7 @@ import (
 
 type Config struct {
 	GRPCPort            string
+	HTTPPort            string
 	DatastoreDBHost     string
 	DatastoreDBUser     string
 	DatastoreDBPassword string
@@ -38,6 +40,7 @@ func RunServer() error {
 
 	var cfg Config
 	flag.StringVar(&cfg.GRPCPort, "grpc-port", "", "gRPC port to bind")
+	flag.StringVar(&cfg.HTTPPort, "http-port", "", "HTTP port to bind")
 	flag.StringVar(&cfg.DatastoreDBHost, "db-host", "", "Database host")
 	flag.StringVar(&cfg.DatastoreDBUser, "db-user", "", "Database user")
 	flag.StringVar(&cfg.DatastoreDBPassword, "db-password", "", "Database password")
@@ -46,6 +49,10 @@ func RunServer() error {
 
 	if check(cfg.GRPCPort) == false {
 		return fmt.Errorf("invalid TCP port for gRPC server: '%s'", cfg.GRPCPort)
+	}
+
+	if check(cfg.HTTPPort) == false {
+		return fmt.Errorf("invalid TCP port for HTTP server: '%s'", cfg.HTTPPort)
 	}
 
 	param := "parseTime=true"
@@ -66,6 +73,11 @@ func RunServer() error {
 
 	// v1API is implement of ToDoServiceServer interface
 	v1API := v1.NewTodoServiceServer(db)
+
+	// run gRPC gateway server
+	go func() {
+		_ = rest.RunServer(ctx, cfg.GRPCPort, cfg.HTTPPort)
+	}()
 
 	// Send gRPC configuration for running gRPC Server
 	return grpc.RunServer(ctx, v1API, cfg.GRPCPort)

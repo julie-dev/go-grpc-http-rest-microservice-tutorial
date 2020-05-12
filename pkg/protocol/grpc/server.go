@@ -17,7 +17,10 @@ func RunServer(ctx context.Context, v1API v1.ToDoServiceServer, port string) err
 		return err
 	}
 
-	server := grpc.NewServer()
+	server := grpc.NewServer(
+		// interceptor middleware chain 등록
+		)
+	// grpc service 를 grpc server 에 등록
 	v1.RegisterToDoServiceServer(server, v1API)
 
 	sig := make(chan os.Signal, 1)

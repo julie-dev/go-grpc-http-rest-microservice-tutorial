@@ -87,11 +87,6 @@ func (s *toDoServiceServer) Create(ctx context.Context, req *v1.CreateRequest) (
 }
 
 func (s *toDoServiceServer) Read(ctx context.Context, req *v1.ReadRequest) (*v1.ReadResponse, error) {
-	//TODO Check API
-	if err := s.checkAPI(req.Api); err != nil {
-		return nil, err
-	}
-
 	//TODO Connect Database
 	c, err := s.connect(ctx)
 	if err != nil {
@@ -184,12 +179,6 @@ func (s *toDoServiceServer) Update(ctx context.Context, req *v1.UpdateRequest) (
 }
 
 func (s *toDoServiceServer) Delete(ctx context.Context, req *v1.DeleteRequest) (*v1.DeleteResponse, error) {
-	//TODO Check API
-	err := s.checkAPI(req.Api)
-	if err != nil {
-		return nil, err
-	}
-
 	//TODO Connect Database
 	c, err := s.db.Conn(ctx)
 	if err != nil {
@@ -222,12 +211,6 @@ func (s *toDoServiceServer) Delete(ctx context.Context, req *v1.DeleteRequest) (
 }
 
 func (s *toDoServiceServer) ReadAll(ctx context.Context, req *v1.ReadAllRequest) (*v1.ReadAllResponse, error) {
-	//TODO Check API
-	err := s.checkAPI(req.Api)
-	if err != nil {
-		return nil, err
-	}
-
 	//TODO Connect Database
 	c, err := s.db.Conn(ctx)
 	if err != nil {
